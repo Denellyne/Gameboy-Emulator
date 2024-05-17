@@ -55,11 +55,15 @@ private:
   Memory Mem;
   Registers Regs;
 
-  void setFlag(char Bit,bool value);
-  bool getFlag(char Bit);
+  void setFlag(char bit,bool value);
+  bool getFlag(char bit);
 
   Byte fetch();
 
-  void Inc(Byte& Reg);
+  void Inc(Byte& reg);
+  void Inc(Byte& regLow,Byte& regHigh);
+
+  void Dec(Byte& reg);
+  void Dec(Byte& regLow,Byte& regHigh);
 
 };
