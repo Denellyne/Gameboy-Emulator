@@ -61,9 +61,11 @@ private:
   Byte fetch();
 
   void Inc(Byte& reg);
+  void Inc(Word& reg);
   void Inc(Byte& regLow,Byte& regHigh);
 
   void Dec(Byte& reg);
+  void Dec(Word& reg);
   void Dec(Byte& regLow,Byte& regHigh);
 
 };

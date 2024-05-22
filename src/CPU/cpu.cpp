@@ -1,5 +1,6 @@
 #include "cpu.h"
 #include "opcodes.h"
+#include <stdio.h>
 
 #define halfCarryBitCheck(x,y) ((((x & 0xF) + (y & 0xF)) & 0x10) == 0x10)
 
@@ -31,6 +32,7 @@ void cpu::execute(){
   case Ins::INC_DE: Inc(Regs.d,Regs.e); Regs.pc++; break;
   case Ins::INC_HL: Inc(Regs.h,Regs.l); Regs.pc++; break;
   case Ins::INC_SP: Inc(Regs.sp); Regs.pc++; break;
+  case Ins::INC_PTR_HL: break;
   //Decrement
   case Ins::DEC_A: Dec(Regs.a); Regs.pc++; break;
   case Ins::DEC_B: Dec(Regs.b); Regs.pc++; break;
@@ -39,14 +41,16 @@ void cpu::execute(){
   case Ins::DEC_E: Dec(Regs.e); Regs.pc++; break;
   case Ins::DEC_H: Dec(Regs.h); Regs.pc++; break;
   case Ins::DEC_L: Dec(Regs.l); Regs.pc++; break;
-  case Ins::DEC_BC: DEC(Regs.b,Regs.c); Regs.pc++; break;
-  case Ins::DEC_DE: DEC(Regs.d,Regs.e); Regs.pc++; break;
-  case Ins::DEC_HL: DEC(Regs.h,Regs.l); Regs.pc++; break;
-  case Ins::DEC_SP: DEC(Regs.sp); Regs.pc++; break;
+  case Ins::DEC_BC: Dec(Regs.b,Regs.c); Regs.pc++; break;
+  case Ins::DEC_DE: Dec(Regs.d,Regs.e); Regs.pc++; break;
+  case Ins::DEC_HL: Dec(Regs.h,Regs.l); Regs.pc++; break;
+  case Ins::DEC_SP: Dec(Regs.sp); Regs.pc++; break;
+  case Ins::DEC_PTR_HL: break;
+
   
-  default:
-    Regs.pc++;
-    break;
+  case Ins::NOP: Regs.pc++;break;
+
+  default: printf("Opcode: 0x%2x",opcode);break; // Illegal Opcode
   }
 
 }
@@ -76,7 +80,11 @@ void cpu::Inc(Byte &reg){
   reg++;
   setFlag(Instructions::flag::Z,reg==0);
   setFlag(Instructions::flag::N,0);
-  }
+}
+
+void cpu::Inc(Word &reg){
+  reg++;
+}
 
 void cpu::Inc(Byte& regLow,Byte& regHigh){
 
@@ -89,6 +97,10 @@ void cpu::Dec(Byte& reg){
   reg--;
   setFlag(Instructions::flag::Z,reg==0);
   setFlag(Instructions::flag::N,1);
+}
+
+void cpu::Dec(Word& reg){
+  reg--;
 }
 
 void cpu::Dec(Byte& regLow,Byte& regHigh){
